@@ -1,4 +1,6 @@
+const sequelize = require("../model");
 const session = require("../model/session");
+const Sequelize = require("sequelize");
 
 const addSession = async (req) => {
   try {
@@ -57,10 +59,54 @@ const deleteSession = async (req) => {
   }
 };
 
+const pastSession = async (req) => {
+  try {
+    const pastSession = session.findAll({
+      where: {
+        startTime: {
+          [Sequelize.Op.lt]: new Date(),
+        },
+      },
+    });
+    return pastSession;
+  } catch (error) {
+    return error;
+  }
+};
+const upCommingSession = async (req) => {
+  try {
+    const upCommingSession = session.findAll({
+      where: {
+        startTime: {
+          [Sequelize.Op.gt]: new Date(),
+        },
+      },
+    });
+    return upCommingSession;
+  } catch (error) {
+    return error;
+  }
+};
+
+// const pastSessionLink = async (req) => {
+//   try {
+//     const sessions = session.findByPk(req.param.startTime);
+
+//     if (!sessions) {
+//       return { Message: "There is no session yet" };
+//     }
+//     sessions.videoUrl = req.params.videoUrl;
+//   } catch (error) {
+//     return error;
+//   }
+// };
+
 module.exports = {
   addSession,
   getAllSessions,
   getOneSession,
   updateSession,
   deleteSession,
+  pastSession,
+  upCommingSession,
 };

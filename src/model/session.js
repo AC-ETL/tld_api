@@ -1,5 +1,6 @@
 const sequelize = require("./index");
 const { DataTypes } = require("sequelize");
+const skill = require("./skills");
 
 const Session = sequelize.define(
   "sessions",
@@ -8,10 +9,6 @@ const Session = sequelize.define(
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
-    },
-    uId: {
-      type: DataTypes.STRING,
-      unique: true,
     },
     title: {
       type: DataTypes.STRING,
@@ -25,8 +22,9 @@ const Session = sequelize.define(
       type: DataTypes.DATE,
       allowNullable: false,
     },
-    tags: {
-      type: DataTypes.STRING,
+    skills_id: {
+      type: DataTypes.INTEGER,
+      foriegnKey: true,
       allowNullable: false,
     },
     points: {
@@ -35,10 +33,22 @@ const Session = sequelize.define(
     image: {
       type: DataTypes.STRING,
     },
+    videoUrl: {
+      type: DataTypes.STRING,
+      defaultValue: false,
+    },
+
+    userUId: {
+      type: DataTypes.STRING,
+      foriegnKey: true,
+    },
   },
   {
     timestamps: false,
   }
 );
+Session.hasMany(skill, {
+  foriegnKey: "skills_id",
+});
 
 module.exports = Session;

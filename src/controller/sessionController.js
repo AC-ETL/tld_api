@@ -24,10 +24,25 @@ const deleteSession = async (req, res) => {
   res.send(result);
 };
 
+const pastSession = async (req, res) => {
+  const result = await sessionServices.pastSession(req);
+  res.send(result);
+};
+
+const upCommingSession = async (req, res) => {
+  const result = await sessionServices.upCommingSession(req);
+  res.send(result);
+};
+// const addurl = async (req, res) => {
+//   const result = await sessionServices.pastSessionLink(req);
+//   res.send(result);
+// };
 module.exports = {
   addSession,
   getAllSessions,
   getOneSession,
   updateSession,
   deleteSession,
+  pastSession,
+  upCommingSession,
 };
