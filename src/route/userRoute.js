@@ -26,19 +26,35 @@ userRoute.route("/").get(userController.getAllUser);
 // Route for filter Users That are Menotors
 userRoute.route("/mentors/:isMentors").get(userController.getMentors);
 
-// Route for Selecting skills against user
+// Route for Selecting skills crossponding to  user
 userRoute.route("/usersSkills").post(userController.userSelectingSkills);
 
-// Route for getting skills against 1 user
-userRoute.route("/userSelectedSkill").get(userController.userSelectedSkills);
+// Route for getting skills agaist users
+userRoute.route("/userSelectedSkill").get(userController.usersSelectedSkills);
+
+// Route for getting skills crossponding to 1 user
+userRoute
+  .route("/userSelectedSkill/:uId")
+  .get(userController.userSelectedSkills);
+
+//  Route for getting users against  skills
+userRoute
+  .route("/userRelevantToSkill")
+  .get(userController.usersRelevantToSkills);
 
 //  Route for getting users against 1 skill
 userRoute
-  .route("/userRelevantToSkill")
+  .route("/userRelevantToSkill/:id")
   .get(userController.usersRelevantToSkill);
 
 // Route for creating followers and following of user
 userRoute.route("/userAudience").post(userController.follower);
+
+userRoute.route("/userAudience/:uId").get(userController.userFollowing);
+
+userRoute
+  .route("/userAudience/follower/:uId")
+  .get(userController.followerOfUser);
 
 // Route for registerd user crossponding to session and session have multipult users that registered 1 user
 userRoute.route("/userSession").post(userController.userSessions);
@@ -47,7 +63,9 @@ userRoute.route("/userSession").post(userController.userSessions);
 userRoute.route("/getUsersOfSession").get(userController.getUsersOfSession);
 
 // Route for getting Data of session crossponding to 1 user
-userRoute.route("/getSessionsOfUser").get(userController.getSessionsOfUsers);
+userRoute
+  .route("/getSessionsOfUser/:uId")
+  .get(userController.getSessionsOfUsers);
 
 userRoute.route("/:id").get(userController.getOneUser);
 

@@ -141,19 +141,65 @@ const userSelectingSkills = async (req) => {
   // }
 };
 
-const userSelectedSkills = async (req) => {
-  const skillData = await user.findOne({
-    where: { uId: "sdt" },
-    include: skills,
+const usersSelectedSkills = async (req) => {
+  const skillData = await user.findAll({
+    include: [
+      {
+        model: skills,
+        through: {
+          attributes: [],
+        },
+      },
+    ],
   });
 
   return skillData;
 };
 
+const userSelectedSkills = async (req) => {
+  const uId = req.params.uId;
+  const skillData = await user.findOne({
+    where: { uId: uId },
+    include: [
+      {
+        model: skills,
+        through: {
+          attributes: [],
+        },
+      },
+    ],
+  });
+
+  return skillData;
+};
+
+const usersRelevantToSkills = async (req) => {
+  const userData = await skills.findAll({
+    include: [
+      {
+        model: user,
+        through: {
+          attributes: [],
+        },
+      },
+    ],
+  });
+
+  return userData;
+};
+
 const usersRelevantToSkill = async (req) => {
-  const userData = await skills.findOne({
-    where: { id: 2 },
-    include: user,
+  const id = req.params.id;
+  const userData = await skills.findAll({
+    where: { id: id },
+    include: [
+      {
+        model: user,
+        through: {
+          attributes: [],
+        },
+      },
+    ],
   });
 
   return userData;
@@ -195,6 +241,55 @@ const follower = async (req) => {
   return data;
 };
 
+const userFollowing = async (req) => {
+  const uId = req.params.uId;
+  console.log(uId);
+
+  const data = await user.findAll({
+    where: { uId: uId },
+    include: [
+      {
+        model: follow,
+        as: "follows",
+        attributes: ["followingId"],
+
+        include: [
+          {
+            model: user,
+            as: "follower",
+            attributes: ["firstName"],
+          },
+        ],
+      },
+    ],
+    attributes: ["firstName"],
+  });
+  return data;
+};
+const followerOfUser = async (req) => {
+  const uId = req.params.uId;
+  const data = await user.findAll({
+    where: { uId: uId },
+    include: [
+      {
+        model: follow,
+        as: "follows",
+        attributes: ["followerId"],
+
+        include: [
+          {
+            model: user,
+            as: "follower",
+            attributes: ["firstName"],
+          },
+        ],
+      },
+    ],
+    attributes: ["firstName"],
+  });
+  return data;
+};
+
 const getOneProile = async (req) => {
   const uId = req.params.uId;
   const data = await user.findOne({
@@ -226,8 +321,9 @@ const getUsersOfSession = async (req) => {
 };
 
 const getSessionsOfUsers = async (req) => {
+  const uId = req.params.uId;
   const data = await user.findOne({
-    where: { uId: "sdkds" },
+    where: { uId: uId },
     include: [
       {
         model: Session,
@@ -250,12 +346,17 @@ module.exports = {
   userCreateSession,
   getUserCreateSessions,
   userSelectingSkills,
+  usersSelectedSkills,
   userSelectedSkills,
   usersRelevantToSkill,
+  usersRelevantToSkills,
   userInfo,
   getUserProfile,
   getOneProile,
   follower,
+  userFollowing,
+  followerOfUser,
+
   userSessions,
   getUsersOfSession,
   getSessionsOfUsers,

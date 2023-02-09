@@ -6,6 +6,7 @@ const usersSkills = require("../model/usersSkills");
 const userProfile = require("./userProfile");
 const follows = require("./follow");
 const userSession = require("./userSession");
+const { followerOfUser } = require("../services/userServices");
 
 const user = sequelize.define(
   "user",
@@ -115,4 +116,22 @@ user.belongsToMany(user, {
   otherKey: "followingId",
 });
 
+user.hasMany(follows, {
+  foreignKey: "followerId",
+  as: "follows",
+  foreignKey: "followingId",
+});
+follows.belongsTo(user, {
+  foreignKey: "followerId",
+  as: "follower",
+  foreignKey: "followingId",
+});
+// user.hasMany(follows, {
+//   foreignKey: "followingId",
+//   as: "follows",
+// });
+// follows.belongsTo(user, {
+//   foreignKey: "followingId",
+//   as: "following",
+// });
 module.exports = user;

@@ -47,8 +47,5 @@ const Session = sequelize.define(
     timestamps: false,
   }
 );
-Session.hasMany(skill, {
-  foriegnKey: "skills_id",
-});
 
 module.exports = Session;

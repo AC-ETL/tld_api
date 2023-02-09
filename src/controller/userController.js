@@ -47,11 +47,19 @@ const userSelectingSkills = async (req, res) => {
   const result = await usersServices.userSelectingSkills(req);
   res.send(result);
 };
+const usersSelectedSkills = async (req, res) => {
+  const result = await usersServices.userSelectedSkills(req);
+  res.send(result);
+};
 const userSelectedSkills = async (req, res) => {
   const result = await usersServices.userSelectedSkills(req);
   res.send(result);
 };
 
+const usersRelevantToSkills = async (req, res) => {
+  const result = await usersServices.usersRelevantToSkill(req);
+  res.send(result);
+};
 const usersRelevantToSkill = async (req, res) => {
   const result = await usersServices.usersRelevantToSkill(req);
   res.send(result);
@@ -79,6 +87,16 @@ const follower = async (req, res) => {
   res.send(result);
 };
 
+const userFollowing = async (req, res) => {
+  const result = await usersServices.userFollowing(req);
+  res.send(result);
+};
+
+const followerOfUser = async (req, res) => {
+  const result = await usersServices.followerOfUser(req);
+  res.send(result);
+};
+
 const userSessions = async (req, res) => {
   const result = await usersServices.userSessions(req);
   res.send(result);
@@ -103,12 +121,16 @@ module.exports = {
   userCreateSession,
   getUserCreateSessions,
   userSelectingSkills,
+  usersSelectedSkills,
   userSelectedSkills,
   usersRelevantToSkill,
+  usersRelevantToSkills,
   userInfo,
   userProfileData,
   getOneProile,
   follower,
+  userFollowing,
+  followerOfUser,
   userSessions,
   getUsersOfSession,
   getSessionsOfUsers,
