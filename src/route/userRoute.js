@@ -6,8 +6,17 @@ const userRoute = express.Router();
 // Route for signUp
 userRoute.route("/add").post(userController.createUser);
 
+//Route for getting All users Information
+userRoute.route("/").get(userController.getAllUser);
+
+// Route for Updata specific user Data
+userRoute.route("/:uId").put(userController.updateUser);
+
+// Route for delete specific data
+userRoute.route("/:uId").delete(userController.deleteUser);
+
 // Route for Creating userProfile crossponding to its UserId
-userRoute.route("/userHasUserProfile").post(userController.userInfo);
+userRoute.route("/userHasUserProfile/:uId").post(userController.userInfo);
 
 // Route for getting Data about UserProfile crossponding to user
 userRoute.route("/getUsersProfileData").get(userController.userProfileData);
@@ -20,11 +29,11 @@ userRoute.route("/createSession").post(userController.userCreateSession);
 // Route for getting data which user create which session
 userRoute.route("/getUserSession").get(userController.getUserCreateSessions);
 
-//Route for getting All users Information
-userRoute.route("/").get(userController.getAllUser);
+// Route for getting data of specific user and its created session
+userRoute.route("/getUserSession/:uId").get(userController.getOneUserSessions);
 
 // Route for filter Users That are Menotors
-userRoute.route("/mentors/:isMentors").get(userController.getMentors);
+userRoute.route("/mentors").get(userController.getMentors);
 
 // Route for Selecting skills crossponding to  user
 userRoute.route("/usersSkills").post(userController.userSelectingSkills);
@@ -57,19 +66,17 @@ userRoute
   .get(userController.followerOfUser);
 
 // Route for registerd user crossponding to session and session have multipult users that registered 1 user
-userRoute.route("/userSession").post(userController.userSessions);
+userRoute.route("/userRegisterSession").post(userController.userSessions);
 
 // Route for getting Data of Users register same session
-userRoute.route("/getUsersOfSession").get(userController.getUsersOfSession);
+userRoute.route("/getUsersOfSession/:id").get(userController.getUsersOfSession);
 
 // Route for getting Data of session crossponding to 1 user
 userRoute
   .route("/getSessionsOfUser/:uId")
   .get(userController.getSessionsOfUsers);
 
-userRoute.route("/:id").get(userController.getOneUser);
-
-userRoute.route("/:id").patch(userController.updateUser);
-userRoute.route("/:id").delete(userController.deleteUser);
+// Route for Getting specific user Data
+userRoute.route("/:uId").get(userController.getOneUser);
 
 module.exports = userRoute;

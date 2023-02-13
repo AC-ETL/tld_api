@@ -17,6 +17,7 @@ const getOneUser = async (req, res) => {
 };
 
 const updateUser = (req, res) => {
+  console.log(req.body);
   const result = usersServices.updateUser(req);
   return result;
 };
@@ -43,12 +44,17 @@ const getUserCreateSessions = async (req, res) => {
   const result = await usersServices.getUserCreateSessions(req);
   res.send(result);
 };
+
+const getOneUserSessions = async (req, res) => {
+  const result = await usersServices.getOneUserSessions(req);
+  res.send(result);
+};
 const userSelectingSkills = async (req, res) => {
   const result = await usersServices.userSelectingSkills(req);
   res.send(result);
 };
 const usersSelectedSkills = async (req, res) => {
-  const result = await usersServices.userSelectedSkills(req);
+  const result = await usersServices.usersSelectedSkills(req);
   res.send(result);
 };
 const userSelectedSkills = async (req, res) => {
@@ -57,7 +63,7 @@ const userSelectedSkills = async (req, res) => {
 };
 
 const usersRelevantToSkills = async (req, res) => {
-  const result = await usersServices.usersRelevantToSkill(req);
+  const result = await usersServices.usersRelevantToSkills(req);
   res.send(result);
 };
 const usersRelevantToSkill = async (req, res) => {
@@ -120,6 +126,7 @@ module.exports = {
   getMentors,
   userCreateSession,
   getUserCreateSessions,
+  getOneUserSessions,
   userSelectingSkills,
   usersSelectedSkills,
   userSelectedSkills,

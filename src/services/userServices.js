@@ -27,7 +27,7 @@ const getAllUsers = async (req) => {
 const getMentors = async (req) => {
   try {
     console.log(req.params.isMentors);
-    const condition = req.params.isMentors;
+    const condition = 1;
     const getMentor = await user.findAll({
       where: {
         isMentor: condition,
@@ -41,7 +41,7 @@ const getMentors = async (req) => {
 
 const getOneUser = async (req) => {
   try {
-    const getOneUseData = await user.findByPk(req.params.id);
+    const getOneUseData = await user.findByPk(req.params.uId);
     return getOneUseData;
   } catch (error) {
     return error;
@@ -50,15 +50,25 @@ const getOneUser = async (req) => {
 
 const updateUser = async (req) => {
   try {
-    const updateUserData = await user.findByPk(req.params.id);
+    const updateUserData = await user.findByPk(req.params.uId);
+
     if (!updateUserData) {
       return { message: "User does not exist" };
     }
-    updateUserData.uId = req.params.id;
-    updateUserData.name = req.params.name;
-    updateUserData.email = req.params.email;
-    updateUserData.image = req.params.image;
-    updateUserData.isMentor = req.params.isMentor;
+
+    console.log(updateUserData);
+
+    const { firstName, lastName, email, image, isMentor } = req.body;
+
+    await updateUserData.update({
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
+      image: image,
+      isMentor: isMentor,
+    });
+
+    return updatedUserData;
   } catch (error) {
     return error;
   }
@@ -66,7 +76,7 @@ const updateUser = async (req) => {
 
 const deleteUser = async (req) => {
   try {
-    const userData = await user.findByPk(req.params.id);
+    const userData = await user.findByPk(req.params.uId);
     console.log(userData);
     if (!userData) {
       return { message: "User does not exist" };
@@ -80,20 +90,6 @@ const deleteUser = async (req) => {
 };
 
 const userCreateSession = async (req) => {
-  // const uId = req.body.uId;
-  // const fN = req.body.firstName;
-  // const lN = req.body.lastName;
-  // const email = req.body.email;
-  // const img = req.body.imageUrl;
-  // const data = await user.create({
-  //   uId: uId,
-  //   firstName: fN,
-  //   lastName: lN,
-  //   email: email,
-  //   imageUrl: img,
-  // });
-
-  // if (data && data.uId) {}
   const sessionData = await Session.create({
     title: req.body.title,
     startTime: req.body.startTime,
@@ -107,6 +103,7 @@ const userCreateSession = async (req) => {
 };
 
 const getUserCreateSessions = async (req) => {
+  console.log("Hello from");
   const data = await user.findAll({
     attributes: ["uId", "firstName", "lastName", "email"],
 
@@ -121,6 +118,30 @@ const getUserCreateSessions = async (req) => {
       },
     ],
   });
+  console.log(data);
+  return data;
+};
+
+const getOneUserSessions = async (req) => {
+  const data = await user.findByPk(req.params.uId, {
+    attributes: ["uId", "firstName", "lastName", "email"],
+
+    include: [
+      {
+        model: Session,
+        attributes: ["title", "startTime", "endTime", "skills_id", "image"],
+
+        through: {
+          attributes: [],
+        },
+      },
+    ],
+  });
+
+  if (!data) {
+    return { message: "User does not exist" };
+  }
+
   console.log(data);
   return data;
 };
@@ -206,13 +227,17 @@ const usersRelevantToSkill = async (req) => {
 };
 
 const userInfo = async (req) => {
-  const data = await user.create({
-    uId: req.body.uId,
-    firstName: req.body.firstName,
-    lastName: req.body.lastName,
-    email: req.body.email,
-    imageUrl: req.body.imageUrl,
-  });
+  const data = await user.findByPk(req.params.uId);
+  if (!data) {
+    return { message: "This user Is not Exist" };
+  }
+  // const data = await user.create({
+  //   uId: req.body.uId,
+  //   firstName: req.body.firstName,
+  //   lastName: req.body.lastName,
+  //   email: req.body.email,
+  //   imageUrl: req.body.imageUrl,
+  // });
   if (data && data.uId) {
     const userData = await userProfile.create({
       About: req.body.About,
@@ -231,6 +256,7 @@ const getUserProfile = async (req) => {
   const data = await user.findAll({
     include: userProfile,
   });
+  console.log(data);
   return data;
 };
 const follower = async (req) => {
@@ -305,8 +331,9 @@ const userSessions = async (req) => {
 };
 
 const getUsersOfSession = async (req) => {
+  const id = req.params.id;
   const data = await Session.findOne({
-    where: { id: 2 },
+    where: { id: id },
     include: [
       {
         model: user,
@@ -345,6 +372,7 @@ module.exports = {
   getMentors,
   userCreateSession,
   getUserCreateSessions,
+  getOneUserSessions,
   userSelectingSkills,
   usersSelectedSkills,
   userSelectedSkills,
