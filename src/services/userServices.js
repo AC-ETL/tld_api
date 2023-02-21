@@ -90,6 +90,8 @@ const deleteUser = async (req) => {
 };
 
 const userCreateSession = async (req) => {
+  const userData = await user.findByPk(req.body.uId);
+
   const sessionData = await Session.create({
     title: req.body.title,
     startTime: req.body.startTime,
@@ -97,7 +99,7 @@ const userCreateSession = async (req) => {
     skills_id: req.body.skills_id,
     points: req.body.points,
     image: req.body.image,
-    userUId: req.body.uId,
+    userUId: userData.uId,
   });
   return sessionData;
 };
@@ -147,16 +149,22 @@ const getOneUserSessions = async (req) => {
 };
 
 const userSelectingSkills = async (req) => {
-  const uId = req.body.uId;
-  const fN = req.body.firstName;
-  const lN = req.body.lastName;
-  const email = req.body.email;
-  const img = req.body.imageUrl;
+  console.log(req.body);
+  // const uId = req.body.uId;
+  // const fN = req.body.firstName;
+  // const lN = req.body.lastName;
+  // const email = req.body.email;
+  // const img = req.body.imageUrl;
+
+  const userData = await user.findByPk(req.body.uId);
+  if (!userData) {
+    return { Message: "Create the account" };
+  }
+  const skillData = await skills.findByPk(req.body.skillId);
 
   const resutlData = await usersSkills.create({
-    id: req.body.id,
-    uId: req.body.uId,
-    skillId: req.body.skillId,
+    uId: userData.uId,
+    skillId: skillData.id,
   });
   return resutlData;
   // }
@@ -260,6 +268,8 @@ const getUserProfile = async (req) => {
   return data;
 };
 const follower = async (req) => {
+  const followerData = user.findByPk(req.uId);
+
   const data = await follow.create({
     followerId: req.body.followerId,
     followingId: req.body.followingId,
