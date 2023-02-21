@@ -25,6 +25,7 @@ const userProfile = sequelize.define(
     uId: {
       type: DataTypes.STRING,
       foreignKey: true,
+      unique: true,
     },
   },
   {

@@ -268,7 +268,7 @@ const getUserProfile = async (req) => {
   return data;
 };
 const follower = async (req) => {
-  const followerData = user.findByPk(req.uId);
+  // const followerData = user.findByPk(req.uId);
 
   const data = await follow.create({
     followerId: req.body.followerId,
@@ -336,7 +336,24 @@ const getOneProile = async (req) => {
 };
 
 const userSessions = async (req) => {
-  const data = await userSession.create(req.body);
+  console.log(req.body.uId);
+  console.log(req.body.session_id);
+  const userId = req.body.uId;
+  const seesionId = req.body.session_id;
+  const userData = await user.findByPk(userId);
+
+  console.log(userData);
+  if (!userData) {
+    return { Message: "Register your self" };
+  }
+
+  const sessionData = await Session.findByPk(seesionId);
+  console.log(sessionData);
+
+  const data = await userSession.create({
+    uId: userData.uId,
+    session_id: sessionData.id,
+  });
   return data;
 };
 
